@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="seznam.ViewPage"
+             Title="ViewPage"
+             MaximumWidthRequest="800">
+    <VerticalStackLayout HorizontalOptions="Center">
+        <HorizontalStackLayout WidthRequest="800" HeightRequest="50">
+            <Label x:Name="TitleText" WidthRequest="750" HeightRequest="50" FontSize="35" HorizontalTextAlignment="Center" HorizontalOptions="Center"></Label>
+            <Button x:Name="Exit" WidthRequest="50" HeightRequest="50" FontSize="35" Clicked="Exit_Clicked" Text="Exit"></Button>
+        </HorizontalStackLayout>
+        <Grid HeightRequest="400" WidthRequest="800" HorizontalOptions="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button BackgroundColor="CornflowerBlue" Text="&lt;" FontSize="50" HeightRequest="400" x:Name="Left" Clicked="Left_Clicked" Grid.Column="0"></Button>
+            <Image HeightRequest="400" Grid.Column="1" x:Name="MainImg"></Image>
+            <Button BackgroundColor="CornflowerBlue" Text="&gt;" FontSize="50" HeightRequest="400" x:Name="Right" Clicked="Right_Clicked" Grid.Column="2"></Button>
+        </Grid>
+        <Label WidthRequest="400" TextColor="White"  HorizontalOptions="Center" Text="Description:" HeightRequest="30" FontSize="15" VerticalTextAlignment="Center"></Label>
+        <Label WidthRequest="400"  TextColor="White" HorizontalOptions="Center" x:Name="DescriptionText" MaximumHeightRequest="200" MinimumHeightRequest="30" FontSize="15" VerticalTextAlignment="Start"></Label>
+        <Label WidthRequest="400" TextColor="White"  HorizontalOptions="Center" Text="Location:" HeightRequest="30" FontSize="15" VerticalTextAlignment="Center"></Label>
+        <Label WidthRequest="400" TextColor="White"  HorizontalTextAlignment="Center" HorizontalOptions="Center" x:Name="LocationText" FontSize="20" HeightRequest="30"></Label>
+        <Label WidthRequest="400" TextColor="White"  HorizontalOptions="Center" Text="Created:" HeightRequest="30" FontSize="15" VerticalTextAlignment="Center"></Label>
+
+        <Label WidthRequest="400" TextColor="White"  HorizontalTextAlignment="Center" HorizontalOptions="Center" x:Name="MadeText" FontSize="20" HeightRequest="30"></Label>
+        <Label WidthRequest="400" TextColor="White"  HorizontalOptions="Center" Text="Last Modified:" HeightRequest="30" FontSize="15" VerticalTextAlignment="Center"></Label>
+
+        <Label WidthRequest="400" TextColor="White"  HorizontalTextAlignment="Center" HorizontalOptions="Center" x:Name="ModifiedText" FontSize="20" HeightRequest="30"></Label>
+    </VerticalStackLayout>
+</ContentPage>
