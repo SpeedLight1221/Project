@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls;
+using SQLite;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -6,15 +7,18 @@ namespace seznam;
 
 public partial class MainPage : ContentPage
 {
-
+    private readonly DB dB;
     public ObservableCollection<ImageClass> Images { get; set; } = new ObservableCollection<ImageClass>();
     ImageClass sel;
 
-    public MainPage()
+    public MainPage(DB dB)
     {
 
         InitializeComponent();
         BindingContext = this;
+        this.dB = dB;
+        DB_all();
+
     }
 
 
@@ -35,10 +39,12 @@ public partial class MainPage : ContentPage
     {
         if (PreviewImg.Source != null)
         {
+            ImageClass ee = new ImageClass(PreviewImg.Source, TitleEntry.Text, DescEntry.Text, LocationEntry.Text, DateEntry.Date, null, Images.Count);
+            Images.Add(ee);
 
-            Images.Add(
-                new ImageClass(PreviewImg.Source, TitleEntry.Text, DescEntry.Text, LocationEntry.Text, DateEntry.Date)
-                );
+
+
+            DB_add(ee);
         }
     }
 
@@ -62,10 +68,9 @@ public partial class MainPage : ContentPage
             sel.ImgPath = PreviewImg.Source;
             sel.MadeOn = DateEntry.Date;
             sel.ModifiedOn = DateTime.Now;
+
+            DB_modify(sel);
         }
-
-
-
 
 
     }
@@ -92,10 +97,52 @@ public partial class MainPage : ContentPage
                 {"List",Images }
             };
 
-            await Shell.Current.GoToAsync("///ViewPage",par);
+            await Shell.Current.GoToAsync("///ViewPage", par);
         }
     }
 
+
+    private async void DB_add(ImageClass c)
+    {
+        await dB.Insert(new DBImage
+        {
+            Img = c.ImgPath.ToString(),
+            Title = c.Title,
+            Description = c.Description,
+            Location = c.Location,
+            Modified = c.ModifiedOn,
+            Created = c.MadeOn
+
+        }) ;
+    }
+
+    private async void DB_modify(ImageClass c)
+    {
+        await dB.Update(new DBImage
+        {
+            Id = c.Id,
+            Img = c.ImgPath.ToString(),
+            Title = c.Title,
+            Description = c.Description,
+            Location = c.Location,
+            Modified = c.ModifiedOn,
+            Created = c.MadeOn
+
+        });
+    }
+
+    private async void DB_all()
+    {
+        List<DBImage> res = await dB.GetAll();
+
+        foreach (DBImage img in res)
+        {
+            Images.Add(
+                new ImageClass(ImageSource.FromFile(img.Img), img.Title, img.Description, img.Location, img.Created, img.Modified,img.Id)
+
+                );
+        }
+    }
 
 
 }
@@ -123,17 +170,28 @@ public class ImageClass : INotifyPropertyChanged
     DateTime modifiedOn;
     public DateTime ModifiedOn { get => modifiedOn; set { modifiedOn = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ModifiedOn")); } }
 
-    public ImageClass(ImageSource img, string title, string description, string location, DateTime madeOn)
+
+   public int Id;
+    public ImageClass(ImageSource img, string title, string description, string location, DateTime madeOn, DateTime? modifiedOn, int id)
     {
         this.ImgPath = img;
         Title = title;
         Description = description;
         Location = location;
         MadeOn = madeOn;
-        ModifiedOn = DateTime.Now;
+        if (modifiedOn != null) { this.modifiedOn = Convert.ToDateTime(modifiedOn); }
+        else { this.modifiedOn = DateTime.Now; }
+        Id = id;
     }
 
 
 
 }
+
+
+
+
+
+
+
 
